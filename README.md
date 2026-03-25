@@ -4,9 +4,7 @@
   <a href="https://clawhub.ai/nishantapatil3/self-improving-intent-security-agent"><img src="https://img.shields.io/badge/Clawhub-Install%20Skill-blueviolet?style=for-the-badge&logo=data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjQiIGhlaWdodD0iMjQiIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KICA8cGF0aCBkPSJNMTIgMkM2LjQ4IDIgMiA2LjQ4IDIgMTJzNC40OCAxMCAxMCAxMCAxMC00LjQ4IDEwLTEwUzE3LjUyIDIgMTIgMnoiIGZpbGw9IndoaXRlIi8+Cjwvc3ZnPgo=" alt="Install on Clawhub"></a>
   <a href="https://nishantapatil3.github.io/self-improving-intent-security-agent/"><img src="https://img.shields.io/badge/Docs-GitHub%20Pages-blue?style=for-the-badge&logo=github" alt="Documentation"></a>
   <a href="https://github.com/nishantapatil3/self-improving-intent-security-agent/actions/workflows/pages.yml"><img src="https://img.shields.io/github/actions/workflow/status/nishantapatil3/self-improving-intent-security-agent/pages.yml?branch=main&style=for-the-badge&label=Build" alt="Documentation Build Status"></a>
-  <a href="https://github.com/nishantapatil3/self-improving-intent-security-agent/releases"><img src="https://img.shields.io/github/v/release/nishantapatil3/self-improving-intent-security-agent?include_prereleases&style=for-the-badge" alt="GitHub release"></a>
   <a href="LICENSE"><img src="https://img.shields.io/badge/License-MIT-blue.svg?style=for-the-badge" alt="MIT License"></a>
-  <img src="https://img.shields.io/badge/Node.js-18+-green?logo=node.js&logoColor=white&style=for-the-badge" alt="Node.js 18+">
 </p>
 
 An autonomous agent skill that combines **intent-based security** with **continuous self-improvement**. Every action is validated against user intent before execution, with automatic rollback on violations and learning from outcomes.
