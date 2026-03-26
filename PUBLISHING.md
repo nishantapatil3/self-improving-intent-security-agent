@@ -45,15 +45,25 @@ To get an npm token:
 
 #### Option 2: Clawhub Direct Publishing
 
+**Required secret:**
 ```
 CLAWHUB_TOKEN=clawhub_xxxxxxxxxxxx
+```
+
+**Optional secret** (only if you know the specific endpoint):
+```
 CLAWHUB_WEBHOOK_URL=https://clawhub.ai/api/webhook/publish
 ```
 
-Check Clawhub documentation for:
-- How to generate API tokens
-- Webhook URLs for automated publishing
-- CLI tools available
+The workflow will:
+1. First try `npx skills publish` with your CLAWHUB_TOKEN (recommended)
+2. If that fails, automatically try common webhook endpoints:
+   - `https://clawhub.ai/api/webhook/publish`
+   - `https://clawhub.ai/api/v1/publish`
+   - `https://api.clawhub.ai/webhook/github`
+3. Use custom CLAWHUB_WEBHOOK_URL if you've provided it
+
+**You only need CLAWHUB_TOKEN** - the webhook URL is optional and will be auto-detected!
 
 ## Manual Publishing
 

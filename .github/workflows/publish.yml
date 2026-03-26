@@ -63,25 +63,59 @@ jobs:
         continue-on-error: true
 
       # Option 2: Publish directly to Clawhub using skills CLI
-      # Uncomment and configure if Clawhub provides a publish API/CLI
-      # - name: Publish to Clawhub
-      #   if: env.CLAWHUB_TOKEN != ''
-      #   run: npx @clawhub/cli publish
-      #   env:
-      #     CLAWHUB_TOKEN: ${{ secrets.CLAWHUB_TOKEN }}
+      - name: Publish to Clawhub
+        if: secrets.CLAWHUB_TOKEN != ''
+        run: |
+          echo "🔧 Publishing to Clawhub..."
+          npx skills publish
+        env:
+          CLAWHUB_TOKEN: ${{ secrets.CLAWHUB_TOKEN }}
+        continue-on-error: true
 
       # Option 3: Trigger webhook if Clawhub uses GitHub integration
-      # Many package registries auto-sync from GitHub releases
-      - name: Notify Clawhub
-        if: env.CLAWHUB_WEBHOOK_URL != ''
+      # Try common webhook endpoints
+      - name: Notify Clawhub via webhook
+        if: secrets.CLAWHUB_TOKEN != '' && secrets.CLAWHUB_WEBHOOK_URL == ''
         run: |
+          # Try common webhook endpoints
+          for endpoint in \
+            "https://clawhub.ai/api/webhook/publish" \
+            "https://clawhub.ai/api/v1/publish" \
+            "https://api.clawhub.ai/webhook/github"
+          do
+            echo "📡 Trying webhook: $endpoint"
+            if curl -X POST "$endpoint" \
+              -H "Content-Type: application/json" \
+              -H "Authorization: Bearer ${{ secrets.CLAWHUB_TOKEN }}" \
+              -d '{
+                "repository": "${{ github.repository }}",
+                "version": "${{ steps.package.outputs.version }}",
+                "release_url": "${{ github.event.release.html_url }}",
+                "commit": "${{ github.sha }}"
+              }' \
+              --fail-with-body; then
+              echo "✅ Webhook succeeded: $endpoint"
+              break
+            else
+              echo "⚠️  Webhook failed: $endpoint"
+            fi
+          done
+        continue-on-error: true
+
+      # Option 4: Custom webhook URL if provided
+      - name: Notify Clawhub via custom webhook
+        if: secrets.CLAWHUB_WEBHOOK_URL != ''
+        run: |
+          echo "📡 Using custom webhook: ${{ secrets.CLAWHUB_WEBHOOK_URL }}"
           curl -X POST "${{ secrets.CLAWHUB_WEBHOOK_URL }}" \
             -H "Content-Type: application/json" \
+            -H "Authorization: Bearer ${{ secrets.CLAWHUB_TOKEN }}" \
             -d '{
               "repository": "${{ github.repository }}",
               "version": "${{ steps.package.outputs.version }}",
               "release_url": "${{ github.event.release.html_url }}"
-            }'
+            }' \
+            --fail-with-body
         continue-on-error: true
 
       - name: Create summary
