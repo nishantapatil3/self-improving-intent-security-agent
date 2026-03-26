@@ -43,7 +43,7 @@ self-improving-intent-security-agent/
 ├── package.json                # Recommended
 ├── assets/                     # Templates
 ├── examples/                   # Usage examples
-├── hooks/                      # Optional automation
+├── hooks/                      # Optional (user-created)
 ├── references/                 # Documentation
 └── scripts/                    # Helper utilities
 ```

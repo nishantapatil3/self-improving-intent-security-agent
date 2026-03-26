@@ -96,9 +96,9 @@ scripts/
 ├── validate-intent.sh # Validate intent format
 └── report.sh          # Generate activity reports
 
-hooks/
-├── pre-action-hook.sh    # Run before actions
-└── post-action-hook.sh   # Run after actions
+hooks/ (optional - create your own)
+├── pre-action-hook.sh    # Run before actions (user-created)
+└── post-action-hook.sh   # Run after actions (user-created)
 ```
 
 ## Development Guidelines
@@ -275,7 +275,10 @@ When and how to apply this pattern
 
 ## Integration Points
 
-### Claude Code Hooks
+### Claude Code Hooks (Optional)
+
+Users can create custom hooks in a `hooks/` directory:
+
 ```json
 {
   "hooks": {
@@ -284,6 +287,8 @@ When and how to apply this pattern
   }
 }
 ```
+
+Note: Hooks are user-created and optional. This skill does not include default hooks.
 
 ### OpenClaw Integration
 Uses `openclaw` field in `package.json` for skill metadata and installation.

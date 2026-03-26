@@ -198,7 +198,7 @@ User Intent → Validation → Authorization → Execution → Monitoring
 
 ### Reference Implementation
 - Repository: `pskoett/pskoett-ai-skills/skills/self-improvement`
-- Structure: Simple SKILL.md, assets/, hooks/, references/, scripts/
+- Structure: Simple SKILL.md, assets/, references/, scripts/ (hooks optional)
 - Focus: Logging-based learning, promotion to permanent memory
 
 ### Key Concepts Applied
