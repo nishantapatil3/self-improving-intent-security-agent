@@ -68,81 +68,28 @@ jobs:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
         continue-on-error: true
 
-      # Option 2: Publish directly to Clawhub using skills CLI
+      # Option 2: Publish directly to Clawhub using CLI
       - name: Publish to Clawhub
         run: |
           if [ -z "$CLAWHUB_TOKEN" ]; then
             echo "⏭️  Skipping Clawhub publish - CLAWHUB_TOKEN not configured"
             exit 0
           fi
-          echo "🔧 Publishing to Clawhub..."
-          npx skills publish
+
+          echo "📦 Installing Clawhub CLI..."
+          npm install -g clawhub
+
+          echo "🔑 Logging in to Clawhub..."
+          echo "$CLAWHUB_TOKEN" | clawhub login --token
+
+          echo "🚀 Publishing to Clawhub..."
+          clawhub publish .
+
+          echo "✅ Successfully published to Clawhub!"
         env:
           CLAWHUB_TOKEN: ${{ secrets.CLAWHUB_TOKEN }}
-        continue-on-error: true
+        continue-on-error: false
 
-      # Option 3: Trigger webhook if Clawhub uses GitHub integration
-      # Try common webhook endpoints
-      - name: Notify Clawhub via webhook
-        run: |
-          if [ -z "$CLAWHUB_TOKEN" ]; then
-            echo "⏭️  Skipping webhook - CLAWHUB_TOKEN not configured"
-            exit 0
-          fi
-          if [ -n "$CLAWHUB_WEBHOOK_URL" ]; then
-            echo "⏭️  Skipping auto-detect - custom webhook URL provided"
-            exit 0
-          fi
-
-          # Try common webhook endpoints
-          for endpoint in \
-            "https://clawhub.ai/api/webhook/publish" \
-            "https://clawhub.ai/api/v1/publish" \
-            "https://api.clawhub.ai/webhook/github"
-          do
-            echo "📡 Trying webhook: $endpoint"
-            if curl -X POST "$endpoint" \
-              -H "Content-Type: application/json" \
-              -H "Authorization: Bearer $CLAWHUB_TOKEN" \
-              -d "{
-                \"repository\": \"${{ github.repository }}\",
-                \"version\": \"${{ steps.package.outputs.version }}\",
-                \"release_url\": \"${{ github.event.release.html_url }}\",
-                \"commit\": \"${{ github.sha }}\"
-              }" \
-              --fail-with-body; then
-              echo "✅ Webhook succeeded: $endpoint"
-              break
-            else
-              echo "⚠️  Webhook failed: $endpoint"
-            fi
-          done
-        env:
-          CLAWHUB_TOKEN: ${{ secrets.CLAWHUB_TOKEN }}
-          CLAWHUB_WEBHOOK_URL: ${{ secrets.CLAWHUB_WEBHOOK_URL }}
-        continue-on-error: true
-
-      # Option 4: Custom webhook URL if provided
-      - name: Notify Clawhub via custom webhook
-        run: |
-          if [ -z "$CLAWHUB_WEBHOOK_URL" ]; then
-            echo "⏭️  Skipping custom webhook - CLAWHUB_WEBHOOK_URL not configured"
-            exit 0
-          fi
-          echo "📡 Using custom webhook: $CLAWHUB_WEBHOOK_URL"
-          curl -X POST "$CLAWHUB_WEBHOOK_URL" \
-            -H "Content-Type: application/json" \
-            -H "Authorization: Bearer $CLAWHUB_TOKEN" \
-            -d "{
-              \"repository\": \"${{ github.repository }}\",
-              \"version\": \"${{ steps.package.outputs.version }}\",
-              \"release_url\": \"${{ github.event.release.html_url }}\"
-            }" \
-            --fail-with-body
-        env:
-          CLAWHUB_TOKEN: ${{ secrets.CLAWHUB_TOKEN }}
-          CLAWHUB_WEBHOOK_URL: ${{ secrets.CLAWHUB_WEBHOOK_URL }}
-        continue-on-error: true
 
       - name: Create summary
         run: |

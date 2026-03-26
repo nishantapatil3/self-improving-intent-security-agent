@@ -50,20 +50,12 @@ To get an npm token:
 CLAWHUB_TOKEN=clawhub_xxxxxxxxxxxx
 ```
 
-**Optional secret** (only if you know the specific endpoint):
-```
-CLAWHUB_WEBHOOK_URL=https://clawhub.ai/api/webhook/publish
-```
-
 The workflow will:
-1. First try `npx skills publish` with your CLAWHUB_TOKEN (recommended)
-2. If that fails, automatically try common webhook endpoints:
-   - `https://clawhub.ai/api/webhook/publish`
-   - `https://clawhub.ai/api/v1/publish`
-   - `https://api.clawhub.ai/webhook/github`
-3. Use custom CLAWHUB_WEBHOOK_URL if you've provided it
+1. Install Clawhub CLI (`npm install -g clawhub`)
+2. Login using your CLAWHUB_TOKEN
+3. Publish your skill using `clawhub publish .`
 
-**You only need CLAWHUB_TOKEN** - the webhook URL is optional and will be auto-detected!
+**You only need CLAWHUB_TOKEN** - no other configuration needed!
 
 ## Manual Publishing
 
@@ -81,19 +73,19 @@ npm publish --access public
 
 ### Method 2: Using Clawhub CLI
 
-If Clawhub provides a dedicated CLI:
+The Clawhub CLI is the recommended way to publish:
 
 ```bash
-# Install CLI (check Clawhub docs for exact package name)
-npm install -g @clawhub/cli
+# Install Clawhub CLI
+npm install -g clawhub
 
-# Login
+# Login with your token
+echo "YOUR_CLAWHUB_TOKEN" | clawhub login --token
+# or interactive login
 clawhub login
 
-# Publish
-clawhub publish
-# or
-npx skills publish
+# Publish your skill (from the skill directory)
+clawhub publish .
 ```
 
 ### Method 3: GitHub Integration
