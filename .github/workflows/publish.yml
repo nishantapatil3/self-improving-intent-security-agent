@@ -56,7 +56,7 @@ jobs:
 
       # Option 1: Publish to npm (if Clawhub syncs from npm)
       - name: Publish to npm
-        if: env.NPM_TOKEN != ''
+        if: ${{ secrets.NPM_TOKEN != '' }}
         run: npm publish --access public
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
@@ -64,7 +64,7 @@ jobs:
 
       # Option 2: Publish directly to Clawhub using skills CLI
       - name: Publish to Clawhub
-        if: secrets.CLAWHUB_TOKEN != ''
+        if: ${{ secrets.CLAWHUB_TOKEN != '' }}
         run: |
           echo "🔧 Publishing to Clawhub..."
           npx skills publish
@@ -75,7 +75,7 @@ jobs:
       # Option 3: Trigger webhook if Clawhub uses GitHub integration
       # Try common webhook endpoints
       - name: Notify Clawhub via webhook
-        if: secrets.CLAWHUB_TOKEN != '' && secrets.CLAWHUB_WEBHOOK_URL == ''
+        if: ${{ secrets.CLAWHUB_TOKEN != '' && secrets.CLAWHUB_WEBHOOK_URL == '' }}
         run: |
           # Try common webhook endpoints
           for endpoint in \
@@ -104,7 +104,7 @@ jobs:
 
       # Option 4: Custom webhook URL if provided
       - name: Notify Clawhub via custom webhook
-        if: secrets.CLAWHUB_WEBHOOK_URL != ''
+        if: ${{ secrets.CLAWHUB_WEBHOOK_URL != '' }}
         run: |
           echo "📡 Using custom webhook: ${{ secrets.CLAWHUB_WEBHOOK_URL }}"
           curl -X POST "${{ secrets.CLAWHUB_WEBHOOK_URL }}" \
