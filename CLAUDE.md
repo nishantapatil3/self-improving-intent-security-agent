@@ -422,6 +422,124 @@ When contributing to this project:
 5. Update documentation for any changes
 6. Add examples for new features
 
+---
+
+## Clawhub Publishing & Security: Lessons Learned
+
+This section documents critical learnings from publishing to Clawhub and passing security scans.
+
+### Security Scan Triggers (What Gets Flagged)
+
+The Clawhub security scanner (DinoScan) flags skills as "suspicious" with medium confidence for:
+
+1. **Environment Variable Mismatches**
+   - ❌ Declaring env vars as `required` in package.json but not actually using them in scripts
+   - ❌ Documentation referencing env vars that scripts don't read
+   - ✅ **Fix**: Declare all env vars as optional with defaults, document clearly they're configuration-only
+
+2. **Missing/Inconsistent Directory References**
+   - ❌ Referencing directories in package.json `files` array that don't exist (e.g., `hooks/`)
+   - ❌ Documentation mentioning files/scripts that aren't included
+   - ✅ **Fix**: Only list actual files/directories, mark optional features as "user-created"
+
+3. **Base64-Encoded Content**
+   - ❌ Base64 blobs in documentation (even legitimate image badges)
+   - ❌ Any `base64 -d` or `echo "..." | base64 --decode` patterns in scripts
+   - ✅ **Fix**: Use external image URLs (shields.io, img.shields.io) instead of inline base64 SVGs
+
+4. **Script Security Concerns**
+   - ❌ Scripts without clear comments explaining what they do
+   - ❌ Scripts that could phone home (curl, wget, nc) without documentation
+   - ❌ Scripts reading arbitrary system files outside project scope
+   - ✅ **Fix**: Add header comments to all scripts clarifying: no credentials needed, local-only operation, no external transmission
+
+5. **Credential/Secret Confusion**
+   - ❌ Publishing docs mentioning tokens (NPM_TOKEN, CLAWHUB_TOKEN) without clarifying they're maintainer-only
+   - ❌ Users might think they need to provide secrets to use the skill
+   - ✅ **Fix**: Add prominent security notes: "No credentials required", "All data stays local", "Nothing transmitted externally"
+
+### Publishing Best Practices
+
+#### Before Publishing Checklist
+
+```bash
+# 1. Verify package.json accuracy
+- [ ] Remove non-existent directories from "files" array
+- [ ] Declare env vars as optional with defaults in config.env
+- [ ] Add security notes in config.notes
+
+# 2. Script hygiene
+- [ ] Add header comments to all .sh files explaining:
+      - What the script does
+      - That no credentials are needed
+      - That data stays local
+      - That nothing is transmitted externally
+
+# 3. Documentation clarity
+- [ ] Mark ALL environment variables as "optional"
+- [ ] Add security note: "No credentials or secrets required"
+- [ ] Clarify publishing tokens are maintainer-only (not for users)
+- [ ] Replace [your-org] placeholders with actual org name
+
+# 4. Directory consistency
+- [ ] Only reference directories that actually exist
+- [ ] Mark optional/user-created features clearly
+- [ ] Ensure SKILL.md, README.md, CLAUDE.md are synchronized
+```
+
+#### Version Publishing Command
+
+```bash
+# Increment version and publish
+npm version patch  # or minor, major
+git push --follow-tags
+clawhub publish --version X.Y.Z --changelog "Clear description of changes" .
+```
+
+#### Writing Good Changelogs
+
+Bad: "bug fixes"
+Good: "Fix security scan issues: clarify all environment variables are optional (not required), add security notes documenting no credentials needed and no data transmitted externally"
+
+### Security Scan Response Pattern
+
+When security scan flags your skill:
+
+1. **Read the full scan report** - identifies specific triggers
+2. **Check each flagged item**:
+   - Base64 blocks → Replace with external image URLs
+   - Missing directories → Remove from files array or create them
+   - Env var mismatches → Mark as optional, add defaults
+   - Script concerns → Add clarifying comments
+3. **Commit fixes** with clear message explaining what was fixed
+4. **Publish new version** with changelog referencing security improvements
+5. **Wait for rescan** - VirusTotal + OpenClaw scan runs automatically
+
+### What Clawhub Security Scans For
+
+Based on Clawhub security documentation and issues:
+
+| Category | Triggers | Severity |
+|----------|----------|----------|
+| Obfuscated code | base64 decode, eval, exec patterns | Critical |
+| Network calls | curl, wget, nc without documentation | High |
+| Credential requests | Asking for tokens/secrets at runtime | High |
+| File system abuse | Reading /etc, ~/.ssh, system files | Critical |
+| Env var mismatches | Declared required but not used | Medium |
+| Missing files | Referenced but not included | Medium |
+| Prompt injection | User input passed to shell without escaping | High |
+
+### Trust Signals for Users
+
+Skills that pass security scans should display:
+- ✅ Clear purpose (name/description match functionality)
+- ✅ Minimal permissions (only what's actually needed)
+- ✅ Transparent operation (comments in scripts, clear docs)
+- ✅ Local-only data (no external transmission)
+- ✅ No credential requirements for runtime use
+
+---
+
 ## Questions?
 
 If you're unsure about something:
