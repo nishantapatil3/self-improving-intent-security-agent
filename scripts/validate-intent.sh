@@ -1,5 +1,10 @@
 #!/usr/bin/env bash
 # Validate intent specification format
+#
+# This script validates the format of intent markdown files.
+# It does NOT require any environment variables or credentials.
+# It only reads the specified intent file and checks for required sections.
+# No data is transmitted externally.
 
 set -e
 

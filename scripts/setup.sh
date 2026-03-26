@@ -1,5 +1,14 @@
 #!/usr/bin/env bash
 # Setup script for self-improving-intent-security-agent
+# 
+# This script creates the local .agent/ directory structure for intent tracking.
+# It does NOT require any environment variables or credentials.
+# All data stays local in the .agent/ directory.
+#
+# Optional environment variables (with defaults):
+#   AGENT_INTENT_PATH - defaults to .agent/intents
+#   AGENT_AUDIT_PATH  - defaults to .agent/audit
+#   AGENT_LEARNING_ENABLED - defaults to true
 
 set -e
 

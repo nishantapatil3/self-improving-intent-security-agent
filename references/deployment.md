@@ -162,7 +162,7 @@ After publishing, users can install your skill:
 clawhub install self-improving-intent-security-agent
 
 # Or via npm/npx
-npx skills add [your-org]/self-improving-intent-security-agent
+npx skills add nishantapatil3/self-improving-intent-security-agent
 ```
 
 ## Updating Published Skill
@@ -346,7 +346,7 @@ npm publish
 Users can install directly from your repository:
 
 ```bash
-npx skills add [your-org]/self-improving-intent-security-agent#main
+npx skills add nishantapatil3/self-improving-intent-security-agent#main
 ```
 
 ## Monitoring

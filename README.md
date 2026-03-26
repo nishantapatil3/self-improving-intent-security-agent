@@ -66,14 +66,14 @@ cd self-improving-intent-security-agent
 ### Basic Usage
 
 ```bash
-# 1. Create directory structure
+# 1. Create directory structure (or run: npm run setup)
 mkdir -p .agent/{intents,violations,learnings,audit}
 
-# 2. Set environment variables
-export AGENT_INTENT_PATH=".agent/intents"
-export AGENT_AUDIT_PATH=".agent/audit"
-export AGENT_LEARNING_ENABLED="true"
-export AGENT_AUTO_ROLLBACK="true"
+# 2. Set environment variables (optional - defaults shown)
+export AGENT_INTENT_PATH=".agent/intents"       # Default: .agent/intents
+export AGENT_AUDIT_PATH=".agent/audit"          # Default: .agent/audit
+export AGENT_LEARNING_ENABLED="true"            # Optional: enable learning
+export AGENT_AUTO_ROLLBACK="true"               # Optional: enable auto-rollback
 
 # 3. Create intent specification
 cat > .agent/intents/INT-$(date +%Y%m%d)-001.md <<'EOF'
@@ -163,25 +163,28 @@ User Intent → Validation → Authorization → Execution → Monitoring
 
 ### Environment Variables
 
+**Important**: All environment variables are **optional**. The skill works with sensible defaults without any configuration.
+
+**Security Note**: This skill does NOT require any credentials or secrets. All data stays local in the `.agent/` directory.
+
 ```bash
-# Required
-export AGENT_INTENT_PATH=".agent/intents"
-export AGENT_AUDIT_PATH=".agent/audit"
+# Paths (optional - defaults shown)
+export AGENT_INTENT_PATH=".agent/intents"       # Default: .agent/intents
+export AGENT_AUDIT_PATH=".agent/audit"          # Default: .agent/audit
 
-# Security
+# Security (optional tuning)
 export AGENT_RISK_THRESHOLD="medium"            # low | medium | high
-export AGENT_REQUIRE_APPROVAL_HIGH_RISK="true"
-export AGENT_AUTO_ROLLBACK="true"
-export AGENT_ANOMALY_THRESHOLD="0.8"
+export AGENT_AUTO_ROLLBACK="true"               # true | false
+export AGENT_ANOMALY_THRESHOLD="0.8"            # 0.0 - 1.0
 
-# Learning
-export AGENT_LEARNING_ENABLED="true"
-export AGENT_MIN_SAMPLE_SIZE="10"
-export AGENT_AB_TEST_RATIO="0.1"
+# Learning (optional tuning)
+export AGENT_LEARNING_ENABLED="true"            # true | false
+export AGENT_MIN_SAMPLE_SIZE="10"               # Minimum samples before learning
+export AGENT_AB_TEST_RATIO="0.1"                # 0.0 - 1.0
 
-# Monitoring
-export AGENT_METRICS_INTERVAL="1000"           # milliseconds
-export AGENT_AUDIT_LEVEL="detailed"            # minimal | standard | detailed
+# Monitoring (optional tuning)
+export AGENT_METRICS_INTERVAL="1000"            # milliseconds
+export AGENT_AUDIT_LEVEL="detailed"             # minimal | standard | detailed
 ```
 
 ### Configuration File

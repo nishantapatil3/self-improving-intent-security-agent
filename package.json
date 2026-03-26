@@ -54,14 +54,48 @@
       "monitoring"
     ],
     "requires": {
-      "env": [
-        "AGENT_INTENT_PATH",
-        "AGENT_AUDIT_PATH"
-      ],
       "bins": [
         "bash",
         "grep"
       ]
+    },
+    "config": {
+      "env": {
+        "AGENT_INTENT_PATH": {
+          "required": false,
+          "default": ".agent/intents",
+          "description": "Path to intent specifications (optional, defaults to .agent/intents)"
+        },
+        "AGENT_AUDIT_PATH": {
+          "required": false,
+          "default": ".agent/audit",
+          "description": "Path to audit logs (optional, defaults to .agent/audit)"
+        },
+        "AGENT_RISK_THRESHOLD": {
+          "required": false,
+          "default": "medium",
+          "description": "Risk threshold: low | medium | high (optional)"
+        },
+        "AGENT_AUTO_ROLLBACK": {
+          "required": false,
+          "default": "true",
+          "description": "Enable automatic rollback on violations (optional)"
+        },
+        "AGENT_ANOMALY_THRESHOLD": {
+          "required": false,
+          "default": "0.8",
+          "description": "Anomaly detection threshold 0.0-1.0 (optional)"
+        },
+        "AGENT_LEARNING_ENABLED": {
+          "required": false,
+          "default": "true",
+          "description": "Enable self-improvement learning (optional)"
+        }
+      },
+      "notes": {
+        "security": "All environment variables are optional configuration. No credentials are required or transmitted. All data stays in local .agent/ directory.",
+        "privacy": "This skill does not send data to external services. All logs and learnings are stored locally."
+      }
     },
     "install": {
       "command": "bash scripts/setup.sh"

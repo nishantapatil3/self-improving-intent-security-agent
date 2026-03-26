@@ -1,5 +1,11 @@
 #!/usr/bin/env bash
 # Generate summary report of agent activity
+#
+# This script reads intent, violation, and learning files from the .agent/ directory
+# and generates a summary report.
+# It does NOT require any environment variables or credentials.
+# All data is read locally and displayed to stdout.
+# No data is transmitted externally.
 
 set -e
 

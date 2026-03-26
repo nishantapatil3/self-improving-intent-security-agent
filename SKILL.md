@@ -8,7 +8,7 @@ description: "Validates actions against user intent before execution, monitors f
 ## Install
 
 ```bash
-npx skills add [your-org]/self-improving-intent-security-agent
+npx skills add nishantapatil3/self-improving-intent-security-agent
 ```
 
 Execute autonomous tasks with intent validation, security monitoring, and continuous learning. Every action is validated against user intent before execution, with automatic rollback on violations and learning from outcomes.
@@ -386,25 +386,28 @@ Promote when:
 
 ### Environment Variables
 
+**Important**: All environment variables are **optional**. The skill works with sensible defaults without any configuration.
+
+**Security Note**: This skill does NOT require any credentials or secrets. All data stays local in the `.agent/` directory. No data is transmitted externally.
+
 ```bash
-# Required
-export AGENT_INTENT_PATH=".agent/intents"
-export AGENT_AUDIT_PATH=".agent/audit"
+# Paths (optional - defaults shown)
+export AGENT_INTENT_PATH=".agent/intents"       # Default: .agent/intents
+export AGENT_AUDIT_PATH=".agent/audit"          # Default: .agent/audit
 
-# Security Settings
-export AGENT_RISK_THRESHOLD="medium"           # low | medium | high
-export AGENT_REQUIRE_APPROVAL_HIGH_RISK="true" # Approval gate for high-risk
-export AGENT_AUTO_ROLLBACK="true"              # Auto-rollback on violations
-export AGENT_ANOMALY_THRESHOLD="0.8"           # Sensitivity (0-1)
+# Security Settings (optional tuning)
+export AGENT_RISK_THRESHOLD="medium"            # low | medium | high
+export AGENT_AUTO_ROLLBACK="true"               # true | false
+export AGENT_ANOMALY_THRESHOLD="0.8"            # 0.0 - 1.0
 
-# Learning Settings
-export AGENT_LEARNING_ENABLED="true"
-export AGENT_MIN_SAMPLE_SIZE="10"              # Min observations before adopting
-export AGENT_AB_TEST_RATIO="0.1"              # 10% of tasks for A/B testing
+# Learning Settings (optional tuning)
+export AGENT_LEARNING_ENABLED="true"            # true | false
+export AGENT_MIN_SAMPLE_SIZE="10"               # Min observations before adopting
+export AGENT_AB_TEST_RATIO="0.1"                # 10% of tasks for A/B testing
 
-# Monitoring
-export AGENT_METRICS_INTERVAL="1000"           # Metrics collection (ms)
-export AGENT_AUDIT_LEVEL="detailed"            # minimal | standard | detailed
+# Monitoring (optional tuning)
+export AGENT_METRICS_INTERVAL="1000"            # Metrics collection (ms)
+export AGENT_AUDIT_LEVEL="detailed"             # minimal | standard | detailed
 ```
 
 ### Configuration File

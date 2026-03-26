@@ -157,27 +157,30 @@ rollback_to_checkpoint() {
 
 ### Environment Variables
 
-Always respect these configuration variables:
+**Important**: All environment variables are **optional**. The skill works without any environment variables set, using sensible defaults.
+
+**Security Note**: This skill does NOT require any credentials or secrets. All data stays local in the `.agent/` directory. No data is transmitted to external services.
+
+#### Configuration Variables (All Optional)
 
 ```bash
-# Required
-AGENT_INTENT_PATH           # Path to intent specifications
-AGENT_AUDIT_PATH            # Path to audit logs
+# Paths (default to .agent/intents and .agent/audit)
+AGENT_INTENT_PATH           # Path to intent specifications (default: .agent/intents)
+AGENT_AUDIT_PATH            # Path to audit logs (default: .agent/audit)
 
-# Security
-AGENT_RISK_THRESHOLD        # low | medium | high
-AGENT_REQUIRE_APPROVAL_HIGH_RISK  # true | false
-AGENT_AUTO_ROLLBACK         # true | false
-AGENT_ANOMALY_THRESHOLD     # 0.0 - 1.0
+# Security (optional tuning)
+AGENT_RISK_THRESHOLD        # Risk threshold: low | medium | high (default: medium)
+AGENT_AUTO_ROLLBACK         # Auto rollback on violations: true | false (default: true)
+AGENT_ANOMALY_THRESHOLD     # Anomaly detection threshold: 0.0 - 1.0 (default: 0.8)
 
-# Learning
-AGENT_LEARNING_ENABLED      # true | false
-AGENT_MIN_SAMPLE_SIZE       # Minimum samples before learning
-AGENT_AB_TEST_RATIO         # 0.0 - 1.0
+# Learning (optional tuning)
+AGENT_LEARNING_ENABLED      # Enable self-improvement: true | false (default: true)
+AGENT_MIN_SAMPLE_SIZE       # Min samples before learning: integer (default: 10)
+AGENT_AB_TEST_RATIO         # A/B test ratio: 0.0 - 1.0 (default: 0.1)
 
-# Monitoring
-AGENT_METRICS_INTERVAL      # milliseconds
-AGENT_AUDIT_LEVEL          # minimal | standard | detailed
+# Monitoring (optional tuning)
+AGENT_METRICS_INTERVAL      # Metrics interval in ms: integer (default: 1000)
+AGENT_AUDIT_LEVEL           # Audit detail: minimal | standard | detailed (default: detailed)
 ```
 
 ## Testing Guidelines
