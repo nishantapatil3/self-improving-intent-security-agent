@@ -14,18 +14,19 @@
     "openclaw",
     "agent-skill"
   ],
-  "author": "Your Name",
+  "author": "Nishant Patil",
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/[your-org]/self-improving-intent-security-agent.git"
+    "url": "https://github.com/nishantapatil3/self-improving-intent-security-agent.git"
   },
   "bugs": {
-    "url": "https://github.com/[your-org]/self-improving-intent-security-agent/issues"
+    "url": "https://github.com/nishantapatil3/self-improving-intent-security-agent/issues"
   },
-  "homepage": "https://github.com/[your-org]/self-improving-intent-security-agent#readme",
+  "homepage": "https://github.com/nishantapatil3/self-improving-intent-security-agent#readme",
   "files": [
     "SKILL.md",
+    "CLAUDE.md",
     "README.md",
     "assets/",
     "examples/",
@@ -52,6 +53,10 @@
     },
     "install": {
       "command": "bash scripts/setup.sh"
+    },
+    "links": {
+      "github": "https://github.com/nishantapatil3/self-improving-intent-security-agent",
+      "documentation": "https://nishantapatil3.github.io/self-improving-intent-security-agent/"
     }
   },
   "dependencies": {},

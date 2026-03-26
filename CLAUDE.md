@@ -1,0 +1,415 @@
+# Claude Context: Self-Improving Intent Security Agent
+
+This document provides context and guidelines for AI agents (Claude, Copilot, etc.) working on this project.
+
+## Project Overview
+
+**Type**: Claude Code Skill / OpenClaw Agent Skill
+**Purpose**: Autonomous agent with intent-based security validation, real-time monitoring, and continuous self-improvement
+**Repository**: https://github.com/nishantapatil3/self-improving-intent-security-agent
+**Clawhub**: https://clawhub.ai/nishantapatil3/self-improving-intent-security-agent
+**Documentation**: https://nishantapatil3.github.io/self-improving-intent-security-agent/
+
+## Core Concept: Intent Security
+
+Traditional security: "Do you have permission?"
+**Intent security: "Should you do this for this goal?"**
+
+Every action is validated against user-specified intent BEFORE execution. This prevents:
+- Goal drift and misalignment
+- Scope creep and mission expansion
+- Unintended side effects
+- Security violations
+
+### Intent Specification Format
+
+Intents are stored in `.agent/intents/` as markdown files:
+
+```markdown
+## [INT-YYYYMMDD-NNN] task_name
+
+**Created**: ISO-8601 timestamp
+**Risk Level**: low | medium | high
+**Status**: active | completed | violated
+
+### Goal
+Clear, specific objective (what success looks like)
+
+### Constraints
+- Explicit boundaries (what NOT to do)
+- Resource limits
+- Privacy/security requirements
+
+### Expected Behavior
+- Anticipated actions
+- Acceptable patterns
+- Performance expectations
+
+### Context
+- Relevant files/directories
+- Environment details
+- Dependencies
+```
+
+## Architecture
+
+```
+User Intent → Validation → Authorization → Execution → Monitoring
+                                              ↓
+                                      Anomaly Detection
+                                              ↓
+                                   [Violation?] → Rollback
+                                              ↓
+                                       Outcome Analysis
+                                              ↓
+                                       Pattern Extraction
+                                              ↓
+                                      Strategy Evolution
+```
+
+### Key Components
+
+1. **Intent Validator**: Pre-execution checks against intent spec
+2. **Authorization Engine**: Multi-layer permission verification
+3. **Execution Monitor**: Real-time behavioral monitoring
+4. **Anomaly Detector**: Identifies goal drift, capability misuse, side effects
+5. **Rollback Manager**: Checkpoint-based state restoration
+6. **Outcome Analyzer**: Extracts insights from task results
+7. **Pattern Extractor**: Identifies reusable successful approaches
+8. **Strategy Optimizer**: A/B tests and evolves strategies
+9. **Knowledge Store**: Persists learnings and strategies
+
+## Directory Structure
+
+```
+.agent/
+├── intents/           # Intent specifications (INT-*.md)
+├── violations/        # Violation logs (VIO-*.md)
+├── learnings/         # Extracted patterns and strategies
+│   ├── LEARNINGS.md   # Learning records
+│   └── STRATEGIES.md  # Evolved strategies
+├── audit/             # Complete audit trail
+└── config.json        # Configuration
+
+scripts/
+├── setup.sh           # Initialize agent structure
+├── validate-intent.sh # Validate intent format
+└── report.sh          # Generate activity reports
+
+hooks/
+├── pre-action-hook.sh    # Run before actions
+└── post-action-hook.sh   # Run after actions
+```
+
+## Development Guidelines
+
+### When Adding Features
+
+1. **Maintain Intent-First Approach**: All new features should validate against intent
+2. **Preserve Safety Guarantees**: Don't bypass validation, rollback, or approval gates
+3. **Keep Learning Bounded**: Self-modification must stay within guardrails
+4. **Ensure Auditability**: Log all decisions and rationale
+
+### Code Patterns
+
+#### Validation Pattern
+```bash
+# Always validate before execution
+./scripts/validate-intent.sh "$INTENT_FILE" || exit 1
+
+# Check constraints
+if ! check_constraints "$ACTION"; then
+    log_violation "$ACTION" "$INTENT_ID"
+    rollback_to_checkpoint
+    exit 1
+fi
+```
+
+#### Learning Pattern
+```bash
+# Record outcome
+record_outcome() {
+    local strategy="$1"
+    local success="$2"
+    local metrics="$3"
+
+    echo "- Strategy: $strategy" >> .agent/learnings/LEARNINGS.md
+    echo "  Success: $success" >> .agent/learnings/LEARNINGS.md
+    echo "  Metrics: $metrics" >> .agent/learnings/LEARNINGS.md
+}
+```
+
+#### Rollback Pattern
+```bash
+# Create checkpoint before risky operations
+create_checkpoint() {
+    local checkpoint_id="CP-$(date +%s)"
+    # Save state...
+    echo "$checkpoint_id"
+}
+
+# Rollback on violation
+rollback_to_checkpoint() {
+    local checkpoint_id="$1"
+    # Restore state...
+}
+```
+
+### Environment Variables
+
+Always respect these configuration variables:
+
+```bash
+# Required
+AGENT_INTENT_PATH           # Path to intent specifications
+AGENT_AUDIT_PATH            # Path to audit logs
+
+# Security
+AGENT_RISK_THRESHOLD        # low | medium | high
+AGENT_REQUIRE_APPROVAL_HIGH_RISK  # true | false
+AGENT_AUTO_ROLLBACK         # true | false
+AGENT_ANOMALY_THRESHOLD     # 0.0 - 1.0
+
+# Learning
+AGENT_LEARNING_ENABLED      # true | false
+AGENT_MIN_SAMPLE_SIZE       # Minimum samples before learning
+AGENT_AB_TEST_RATIO         # 0.0 - 1.0
+
+# Monitoring
+AGENT_METRICS_INTERVAL      # milliseconds
+AGENT_AUDIT_LEVEL          # minimal | standard | detailed
+```
+
+## Testing Guidelines
+
+### Test Intent Validation
+```bash
+# Create test intent
+cat > test_intent.md <<'EOF'
+## [INT-TEST-001] test_task
+**Risk Level**: low
+### Goal
+Test validation logic
+### Constraints
+- No file deletions
+EOF
+
+# Validate format
+./scripts/validate-intent.sh test_intent.md
+
+# Test violation detection
+# (should block and log)
+```
+
+### Test Learning Mechanism
+```bash
+# Run task multiple times with different strategies
+# Verify patterns are extracted
+# Confirm better strategies are adopted
+grep "adopted" .agent/learnings/STRATEGIES.md
+```
+
+### Test Rollback
+```bash
+# Create checkpoint
+# Make changes
+# Trigger rollback
+# Verify state restored
+```
+
+## File Format Specifications
+
+### Intent File (INT-*.md)
+- Naming: `INT-YYYYMMDD-NNN.md` (e.g., `INT-20250326-001.md`)
+- Required fields: Goal, Constraints, Risk Level, Status
+- Must be valid markdown
+- Use ISO-8601 timestamps
+
+### Violation File (VIO-*.md)
+```markdown
+## [VIO-YYYYMMDD-NNN] Violation Description
+
+**Detected**: ISO-8601 timestamp
+**Intent**: INT-YYYYMMDD-NNN
+**Severity**: low | medium | high | critical
+
+### Action Attempted
+What was blocked
+
+### Violation Type
+- goal_drift | constraint_violation | capability_misuse | side_effect
+
+### Rationale
+Why this violated intent
+
+### Rollback
+- Checkpoint: CP-timestamp
+- Status: success | failed
+```
+
+### Learning Record (LEARNINGS.md)
+```markdown
+## Pattern: pattern-name
+
+**Extracted**: ISO-8601 timestamp
+**Category**: strategy | antipattern | optimization
+**Confidence**: 0.0 - 1.0
+
+### Observation
+What was observed across multiple executions
+
+### Pattern
+Identified reusable approach
+
+### Evidence
+- Sample size: N
+- Success rate: X%
+- Performance: metrics
+
+### Application
+When and how to apply this pattern
+```
+
+## Integration Points
+
+### Claude Code Hooks
+```json
+{
+  "hooks": {
+    "beforeTool": "bash hooks/pre-action-hook.sh",
+    "afterTool": "bash hooks/post-action-hook.sh"
+  }
+}
+```
+
+### OpenClaw Integration
+Uses `openclaw` field in `package.json` for skill metadata and installation.
+
+### GitHub Actions
+- `.github/workflows/pages.yml` - Deploys documentation to GitHub Pages
+- Add `.github/workflows/test.yml` for CI/CD validation
+
+## Common Tasks
+
+### Adding a New Component
+1. Ensure it validates against intent
+2. Add audit logging
+3. Implement rollback if stateful
+4. Document in `references/`
+5. Add examples to `examples/`
+
+### Modifying Validation Logic
+1. Update `scripts/validate-intent.sh`
+2. Add tests for edge cases
+3. Update `SKILL.md` documentation
+4. Consider backward compatibility
+
+### Enhancing Learning
+1. Modify pattern extraction in learning module
+2. Test with multiple sample scenarios
+3. Verify safety guardrails still apply
+4. Document new strategies in `references/self-improvement.md`
+
+### Updating Documentation
+1. Main docs in `SKILL.md`
+2. Deep dives in `references/`
+3. Practical examples in `examples/`
+4. Keep README.md synchronized
+5. GitHub Pages auto-deploys from `main`
+
+## Safety Principles
+
+### Always Enforce
+1. **Intent Alignment**: Every action must serve stated goal
+2. **Permission Boundaries**: Cannot exceed authorized scope
+3. **Reversibility**: Must be able to rollback
+4. **Auditability**: Complete transparency log
+5. **Bounded Learning**: Self-modification within guardrails
+6. **Human Oversight**: Approval gates for high-risk ops
+
+### Never Do
+- Skip intent validation
+- Bypass approval gates for high-risk operations
+- Modify safety guardrails without explicit user consent
+- Learn patterns that violate constraints
+- Execute without audit logging
+- Disable rollback capability
+
+## Debugging
+
+### Check Intent Validity
+```bash
+./scripts/validate-intent.sh .agent/intents/INT-*.md
+```
+
+### Review Violations
+```bash
+cat .agent/violations/VIOLATIONS.md
+grep "Severity**: high" .agent/violations/*.md
+```
+
+### Check Learning Progress
+```bash
+cat .agent/learnings/LEARNINGS.md
+cat .agent/learnings/STRATEGIES.md
+```
+
+### Generate Report
+```bash
+./scripts/report.sh
+```
+
+### Audit Trail
+```bash
+ls -ltr .agent/audit/
+tail -f .agent/audit/$(date +%Y%m%d).log
+```
+
+## Package Management
+
+### Publishing to npm/Clawhub
+```bash
+npm version patch  # or minor, major
+git push --tags
+npm publish        # Or Clawhub auto-publishes from GitHub
+```
+
+### Version Strategy
+- Patch: Bug fixes, documentation updates
+- Minor: New features, backward compatible
+- Major: Breaking changes, architecture changes
+
+## Resources
+
+- **SKILL.md**: User-facing skill documentation
+- **references/**: Deep technical documentation
+  - `architecture.md`: System design
+  - `intent-security.md`: Security model
+  - `self-improvement.md`: Learning mechanisms
+  - `multi-agent.md`: Agent integrations
+- **examples/**: Step-by-step walkthroughs
+- **GitHub Issues**: Bug reports and feature requests
+- **Clawhub**: Installation and discovery
+
+## Contributing
+
+When contributing to this project:
+1. Read this file thoroughly
+2. Understand the intent security model
+3. Test with real intent specifications
+4. Verify safety guarantees are maintained
+5. Update documentation for any changes
+6. Add examples for new features
+
+## Questions?
+
+If you're unsure about something:
+1. Check existing intent specifications in `examples/`
+2. Review violation logs for similar cases
+3. Consult `references/intent-security.md`
+4. Look at learning patterns in `.agent/learnings/`
+5. Check GitHub issues for discussions
+
+---
+
+**Remember**: Intent security is about alignment, not just permission. Every decision should serve the user's stated goal while respecting constraints. When in doubt, validate against intent and ask for clarification.
