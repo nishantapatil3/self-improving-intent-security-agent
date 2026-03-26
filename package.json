@@ -1,6 +1,6 @@
 {
   "name": "self-improving-intent-security-agent",
-  "version": "1.0.0",
+  "version": "1.0.2",
   "description": "Autonomous agent with intent validation, security monitoring, and continuous learning",
   "keywords": [
     "agent",
@@ -47,10 +47,21 @@
   "openclaw": {
     "type": "skill",
     "category": "security",
-    "tags": ["intent-security", "self-improvement", "autonomous-agent", "monitoring"],
+    "tags": [
+      "intent-security",
+      "self-improvement",
+      "autonomous-agent",
+      "monitoring"
+    ],
     "requires": {
-      "env": ["AGENT_INTENT_PATH", "AGENT_AUDIT_PATH"],
-      "bins": ["bash", "grep"]
+      "env": [
+        "AGENT_INTENT_PATH",
+        "AGENT_AUDIT_PATH"
+      ],
+      "bins": [
+        "bash",
+        "grep"
+      ]
     },
     "install": {
       "command": "bash scripts/setup.sh"
