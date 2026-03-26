@@ -367,17 +367,30 @@ tail -f .agent/audit/$(date +%Y%m%d).log
 
 ## Package Management
 
-### Publishing to npm/Clawhub
+### Publishing to Clawhub
+
+This repository includes automated publishing via GitHub Actions. See `PUBLISHING.md` for complete details.
+
+**Quick release:**
 ```bash
 npm version patch  # or minor, major
-git push --tags
-npm publish        # Or Clawhub auto-publishes from GitHub
+git push --follow-tags
+gh release create v$(node -p "require('./package.json').version") --generate-notes
 ```
 
+The GitHub Action (`.github/workflows/publish.yml`) automatically publishes on release.
+
+**Required secrets** (configure in GitHub repo settings):
+- `NPM_TOKEN` - For npm publishing (if Clawhub syncs from npm)
+- `CLAWHUB_TOKEN` - For direct Clawhub publishing (if available)
+- `CLAWHUB_WEBHOOK_URL` - For webhook-based publishing (if applicable)
+
 ### Version Strategy
-- Patch: Bug fixes, documentation updates
-- Minor: New features, backward compatible
-- Major: Breaking changes, architecture changes
+- **Patch** (1.0.0 → 1.0.1): Bug fixes, documentation updates
+- **Minor** (1.0.0 → 1.1.0): New features, backward compatible
+- **Major** (1.0.0 → 2.0.0): Breaking changes, architecture changes
+
+See `PUBLISHING.md` for detailed publishing instructions and troubleshooting.
 
 ## Resources
 
