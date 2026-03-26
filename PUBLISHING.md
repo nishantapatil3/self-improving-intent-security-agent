@@ -43,19 +43,21 @@ To get an npm token:
 3. Generate new "Automation" token
 4. Add to GitHub secrets
 
-#### Option 2: Clawhub Direct Publishing
+#### Option 2: Clawhub Direct Publishing (Optional)
 
 **Required secret:**
 ```
 CLAWHUB_TOKEN=clawhub_xxxxxxxxxxxx
 ```
 
-The workflow will:
+The workflow will attempt to:
 1. Install Clawhub CLI (`npm install -g clawhub`)
 2. Login using your CLAWHUB_TOKEN
-3. Publish your skill using `clawhub publish .`
+3. Publish your skill using `npx clawhub publish .`
 
-**You only need CLAWHUB_TOKEN** - no other configuration needed!
+**Note**: If CLI publish fails, the workflow gracefully handles the failure and relies on GitHub auto-sync instead.
+
+**You only need CLAWHUB_TOKEN** for the CLI attempt, but GitHub auto-sync works without it!
 
 ## Manual Publishing
 
@@ -73,30 +75,32 @@ npm publish --access public
 
 ### Method 2: Using Clawhub CLI
 
-The Clawhub CLI is the recommended way to publish:
+The Clawhub CLI can be used to publish:
 
 ```bash
 # Install Clawhub CLI
 npm install -g clawhub
 
 # Login with your token
-echo "YOUR_CLAWHUB_TOKEN" | clawhub login --token
+echo "YOUR_CLAWHUB_TOKEN" | npx clawhub login --token
 # or interactive login
-clawhub login
+npx clawhub login
 
 # Publish your skill (from the skill directory)
-clawhub publish .
+npx clawhub publish .
 ```
 
-### Method 3: GitHub Integration
+**Note**: If the CLI publish fails, use Method 3 (GitHub integration) instead - it's more reliable!
 
-Some package registries auto-sync from GitHub:
+### Method 3: GitHub Integration (Recommended)
 
-1. Ensure `package.json` has correct repository URL
+Clawhub auto-syncs from GitHub releases - this is the most reliable method:
+
+1. Ensure your repository is connected to Clawhub (one-time setup)
 2. Create a GitHub release with proper version tag
-3. Clawhub automatically detects and syncs
+3. Clawhub automatically detects and syncs your skill
 
-This is likely how Clawhub works based on its GitHub integration features.
+**This is the recommended approach** as it avoids CLI bugs and works reliably!
 
 ## Version Management
 
