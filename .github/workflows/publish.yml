@@ -98,7 +98,7 @@ jobs:
           fi
 
           echo "🔑 Logging in to Clawhub..."
-          echo "$CLAWHUB_TOKEN" | $CLAWHUB_CMD login --token || {
+          $CLAWHUB_CMD login --token "$CLAWHUB_TOKEN" || {
             echo "⚠️  Login failed, but continuing..."
           }
 
