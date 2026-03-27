@@ -1,6 +1,6 @@
 {
   "name": "self-improving-intent-security-agent",
-  "version": "1.0.2",
+  "version": "1.0.6",
   "description": "Autonomous agent with intent validation, security monitoring, and continuous learning",
   "keywords": [
     "agent",

@@ -37,6 +37,17 @@ mkdir -p .agent/{intents,violations,learnings,audit}
 
 Copy templates from `assets/` or create files with headers.
 
+For a complete conversation-driven working folder, scaffold a run pack:
+
+```bash
+./scripts/scaffold-run.sh examples/my-demo customer_feedback medium
+```
+
+This creates:
+- `conversation.md` for the user/agent transcript
+- `report.md` for the final summary
+- a local `.agent/` tree with intent, audit, violation, rollback, learning, and strategy files
+
 ## Intent Specification Format
 
 Before executing autonomous tasks, capture structured intent:
@@ -72,6 +83,39 @@ What you want to achieve (single clear objective)
 Save to `.agent/intents/INT-YYYYMMDD-XXX.md`.
 
 ## Validation Workflow
+
+## Conversation-Driven Workflow
+
+Use this when you want the skill to document not just the intent, but the full user and agent interaction over time.
+
+### Recommended Sequence
+
+1. Capture the user request in `conversation.md`
+2. Translate it into a structured intent in `.agent/intents/`
+3. Record allowed and blocked actions in `.agent/audit/`
+4. Log suspicious behavior in `.agent/violations/ANOMALIES.md`
+5. Log hard validation failures in `.agent/violations/`
+6. Record recovery steps in `.agent/audit/ROLLBACKS.md`
+7. Extract reusable learnings in `.agent/learnings/`
+8. Promote stable improvements into `.agent/learnings/STRATEGIES.md`
+9. Summarize the run in `report.md`
+
+### Good Fit
+
+- High-risk or privacy-sensitive tasks
+- Tasks where you need a human-readable transcript
+- Demos and evaluations
+- Incident reviews and postmortems
+
+### Example
+
+See `examples/customer-feedback-demo/` for a full run showing:
+- intent capture
+- per-action validation
+- anomaly detection
+- blocked violation
+- rollback
+- learning promotion
 
 ### Pre-Execution Validation
 

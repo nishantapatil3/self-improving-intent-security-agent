@@ -120,6 +120,9 @@ EOF
 cat .agent/violations/VIOLATIONS.md    # Any violations?
 cat .agent/learnings/LEARNINGS.md      # What was learned?
 ./scripts/report.sh                     # Summary report
+
+# Optional: scaffold a complete conversation-driven run folder
+./scripts/scaffold-run.sh examples/my-demo customer_feedback medium
 ```
 
 ## Documentation
@@ -134,6 +137,7 @@ cat .agent/learnings/LEARNINGS.md      # What was learned?
 |----------|-------------|
 | [SKILL.md](SKILL.md) | Complete usage guide and quick reference |
 | [examples/](examples/) | Practical examples with step-by-step walkthroughs |
+| [examples/customer-feedback-demo/](examples/customer-feedback-demo/) | End-to-end conversation, intent, violation, rollback, and learning demo |
 | [references/architecture.md](references/architecture.md) | System design and components |
 | [references/intent-security.md](references/intent-security.md) | Intent validation and authorization |
 | [references/self-improvement.md](references/self-improvement.md) | Learning mechanisms and safety |
