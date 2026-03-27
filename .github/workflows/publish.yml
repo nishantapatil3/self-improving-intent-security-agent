@@ -80,11 +80,14 @@ jobs:
           echo "📦 Installing Clawhub CLI..."
           npm install -g clawhub
 
+          # Add npm global bin to PATH to ensure clawhub command is available
+          export PATH="$(npm config get prefix)/bin:$PATH"
+
           echo "🔑 Logging in to Clawhub..."
-          echo "$CLAWHUB_TOKEN" | npx clawhub login --token
+          echo "$CLAWHUB_TOKEN" | clawhub login --token
 
           echo "🚀 Publishing to Clawhub..."
-          if npx clawhub publish .; then
+          if clawhub publish .; then
             echo "✅ Successfully published to Clawhub!"
           else
             echo "⚠️  CLI publish failed"
