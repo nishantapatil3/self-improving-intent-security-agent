@@ -1,6 +1,6 @@
 ---
 name: self-improving-intent-security-agent
-description: "Validates actions against user intent before execution, monitors for misalignment, and learns from experience. Use when: (1) Executing autonomous tasks with clear goals, (2) High-risk operations that need validation, (3) Actions that could have unintended side effects, (4) Building systems that improve over time, (5) Need audit trail and rollback capability. Combines intent-based security with self-improvement for safe, adaptive autonomous agents."
+description: "Documentation-first skill and workflow toolkit for intent-based security. Provides templates, examples, and local helper scripts for capturing intent, reviewing actions, documenting rollbacks, and recording learnings. Use when: (1) designing or prototyping intent validation workflows, (2) documenting high-risk operations, (3) creating audit trails and rollback records, (4) building your own runtime enforcement layer."
 ---
 
 # Self-Improving Intent Security Agent
@@ -11,7 +11,13 @@ description: "Validates actions against user intent before execution, monitors f
 npx skills add nishantapatil3/self-improving-intent-security-agent
 ```
 
-Execute autonomous tasks with intent validation, security monitoring, and continuous learning. Every action is validated against user intent before execution, with automatic rollback on violations and learning from outcomes.
+Use this skill to structure and document intent validation workflows. It does not ship a production runtime engine that automatically intercepts agent actions; instead, it provides templates, examples, and local scripts that help you build, simulate, or document that workflow.
+
+## Scope Clarification
+
+- This package includes markdown templates, examples, and helper shell scripts
+- The helper shell scripts operate on local files only
+- Automatic enforcement, anomaly detection, rollback execution, and learning application must be implemented by the host agent or surrounding system
 
 ## Quick Reference
 
@@ -19,8 +25,8 @@ Execute autonomous tasks with intent validation, security monitoring, and contin
 |-----------|--------|
 | Starting autonomous task | Capture intent specification (goal, constraints, expected behavior) |
 | Before each action | Validate against intent, check authorization |
-| Action violates intent | Auto-rollback to checkpoint, log violation |
-| Unusual behavior detected | Flag anomaly, assess severity, rollback if high-risk |
+| Action violates intent | Document the violation and follow the rollback workflow |
+| Unusual behavior detected | Log an anomaly, assess severity, and decide whether to halt or roll back |
 | Task completes | Analyze outcome, extract patterns, update strategies |
 | High-risk operation | Require human approval before execution |
 | Need transparency | Review audit log with full action history |
@@ -35,7 +41,7 @@ Create `.agent/` directory in project root:
 mkdir -p .agent/{intents,violations,learnings,audit}
 ```
 
-Copy templates from `assets/` or create files with headers.
+Copy templates from `assets/` or create files with headers. Review the included shell scripts before running them if you want to understand exactly what they do.
 
 For a complete conversation-driven working folder, scaffold a run pack:
 
