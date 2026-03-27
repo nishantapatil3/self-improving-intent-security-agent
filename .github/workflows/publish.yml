@@ -103,7 +103,7 @@ jobs:
           }
 
           echo "🚀 Publishing to Clawhub..."
-          if $CLAWHUB_CMD publish .; then
+          if $CLAWHUB_CMD publish . --version "${{ steps.package.outputs.version }}"; then
             echo "✅ Successfully published to Clawhub!"
           else
             echo "⚠️  CLI publish failed"
