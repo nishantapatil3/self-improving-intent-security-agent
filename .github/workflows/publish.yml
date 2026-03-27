@@ -26,7 +26,7 @@ jobs:
         continue-on-error: true
 
       - name: Publish to Clawhub
-        uses: ./
+        uses: nishantapatil3/clawhub-publish-action@v1
         with:
           clawhub-token: ${{ secrets.CLAWHUB_TOKEN }}
           npm-token: ${{ secrets.NPM_TOKEN }}
