@@ -80,14 +80,30 @@ jobs:
           echo "📦 Installing Clawhub CLI..."
           npm install -g clawhub
 
-          # Add npm global bin to PATH to ensure clawhub command is available
-          export PATH="$(npm config get prefix)/bin:$PATH"
+          # Get the npm global bin directory and add to PATH
+          NPM_BIN=$(npm config get prefix)/bin
+          export PATH="$NPM_BIN:$PATH"
+          echo "NPM bin directory: $NPM_BIN"
+          ls -la "$NPM_BIN" || echo "NPM bin not found at $NPM_BIN"
+
+          # Check if clawhub is available
+          if ! command -v clawhub &> /dev/null; then
+            echo "⚠️  Clawhub CLI not found in PATH after installation"
+            echo "Trying to use npx as fallback..."
+            # Alternative: Try using npx with explicit package name
+            CLAWHUB_CMD="npx --yes clawhub@latest"
+          else
+            CLAWHUB_CMD="clawhub"
+            echo "✅ Clawhub CLI found: $(which clawhub)"
+          fi
 
           echo "🔑 Logging in to Clawhub..."
-          echo "$CLAWHUB_TOKEN" | clawhub login --token
+          echo "$CLAWHUB_TOKEN" | $CLAWHUB_CMD login --token || {
+            echo "⚠️  Login failed, but continuing..."
+          }
 
           echo "🚀 Publishing to Clawhub..."
-          if clawhub publish .; then
+          if $CLAWHUB_CMD publish .; then
             echo "✅ Successfully published to Clawhub!"
           else
             echo "⚠️  CLI publish failed"
