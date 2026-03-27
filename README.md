@@ -40,6 +40,24 @@ This fundamental shift enables autonomous agents to:
 - **Explainable Learning**: Traceable improvements
 - **Rollback Capability**: Undo at any time
 
+## 🚀 GitHub Action
+
+This repository also includes a **reusable GitHub Action** for publishing Claude Code skills to Clawhub!
+
+```yaml
+- uses: nishantapatil3/self-improving-intent-security-agent@v1
+  with:
+    clawhub-token: ${{ secrets.CLAWHUB_TOKEN }}
+```
+
+**Features:**
+- ✅ Automated publishing to Clawhub marketplace
+- ✅ Validates package.json and openclaw config
+- ✅ Optional npm publishing support
+- ✅ Detailed workflow summaries
+
+👉 [Full Action Documentation](./ACTION_README.md)
+
 ## Quick Start
 
 ### Installation

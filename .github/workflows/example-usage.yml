@@ -1,0 +1,25 @@
+# Example workflow showing how to use the Publish to Clawhub action
+name: Example - Publish to Clawhub
+
+on:
+  workflow_dispatch:
+  release:
+    types: [published]
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Publish to Clawhub
+        uses: nishantapatil3/self-improving-intent-security-agent@main
+        with:
+          clawhub-token: ${{ secrets.CLAWHUB_TOKEN }}
+          # Optional: specify version (defaults to package.json version)
+          # version: '1.0.3'
+          # Optional: specify package directory
+          # package-dir: './my-skill'
+          # Optional: publish to npm as well
+          # npm-token: ${{ secrets.NPM_TOKEN }}
